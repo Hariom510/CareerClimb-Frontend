@@ -26,6 +26,7 @@ function Form() {
   const [experience, setExperience] = useState("");
   const [checkedbox, setCheckedbox] = useState(false);
   const [emailError, setEmailError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const [modal, setModal] = useState(false);
 
@@ -45,6 +46,7 @@ function Form() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setSubmitting(true);
     await axios
       .post(
         `${baseURL}/forms`,
@@ -82,6 +84,7 @@ function Form() {
         setCheckedbox(false);
         setJobType("");
         setSelectRole("");
+        setSubmitting(false);
         toast.success(
           "Application submitted successfully. We will get back to you as soon as possible.",
           {
@@ -99,6 +102,7 @@ function Form() {
       .catch((err) => {
         console.log(err);
         alert("error occurs");
+        setSubmitting(false);
       });
   };
 
@@ -297,6 +301,7 @@ function Form() {
               Preview
             </button>
             <input className="submitButton" type="submit" />
+            { submitting && <label><strong style={{color:"#0e6656"}}>Please wait..</strong></label> }
           </form>
         </FormChild>
       </Forms>
