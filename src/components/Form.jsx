@@ -65,7 +65,7 @@ function Form() {
         },
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/json", 
           },
         }
       )
@@ -105,6 +105,35 @@ function Form() {
         setSubmitting(false);
       });
   };
+
+  const [items, setItems] = useState(null);
+  // const [desc, setDesc] = useState([]);
+  useEffect(() => {
+    const fun = async () => { 
+      const response = await fetch(`${baseURL}/getcontent`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+     
+      const json = await response.json();
+      if (json) {
+        setItems(json);
+      }
+    };
+
+    (jobType === "Jobs" || jobType === "Internships") && fun();
+   
+  }, [jobType]);
+
+  //  console.log("items is: "+ JSON.stringify(items, undefined, "\t"));
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
 
   return (
     <>
@@ -273,11 +302,17 @@ function Form() {
                     <option value="" selected="true" disabled="disabled">
                       Choose Role you are interested in
                     </option>
-                    <option value="Frontend Developer">
-                      Frontend Developer
-                    </option>
-                    <option value="Backend Developer">Backend Developer</option>
-                    <option value="Android Developer">Andriod Developer</option>
+                    {
+                      items &&  items.map((val)=>{
+                        return (
+                        <>
+                        <option key={val._id} value={val.textData}>
+                          {val.textData}
+                          </option>
+                          </>
+                        )
+                      })
+                   }
                   </select>
                 </>
               )}
@@ -290,7 +325,7 @@ function Form() {
             />{" "}
             <h6>
               {" "}
-              Click this checkbox to receive job notification from LiteStore.
+              Click this checkbox to receive job notification from CareerClimb.
             </h6>
             <br />
             <button
@@ -308,7 +343,7 @@ function Form() {
       <Modal size="lg" isOpen={modal} toggle={() => setModal(!modal)}>
         <ModalHeader
           toggle={() => setModal(!modal)}
-          style={{ color: "#0e6656" }}
+          style={{ color: "#00283C" }}
         >
           Preview
         </ModalHeader>
@@ -335,7 +370,7 @@ function Form() {
 export default Form;
 
 const Forms = styled.div`
-  background-color: white;
+  background-color: #FFFFE0;
   text-align: center;
   margin: 30px 50px;
   padding-bottom: 50px;
@@ -346,8 +381,15 @@ const Forms = styled.div`
   h2 {
     font-size: 26px;
     font-weight: 700;
-    color: #0e6656;
+    color: #00283C;
   }
+  input{
+    background-color: #FFFFE0;
+  }
+  select{
+    background-color: #FFFFE0;
+  }
+  
 `;
 const FormChild = styled.div`
   margin-bottom: 200px;
@@ -402,16 +444,17 @@ const FormChild = styled.div`
     width: 140px;
     height: 45px;
     border-radius: 8px;
-    background-color: #0e6656;
+    /* background-color: #0e6656; */
+    background-color: #00283C;
     color: white;
     font-size: 21px;
     font-weight: 500;
     border: 1px solid;
     :hover {
-      background-color: #0e6656;
+      /* background-color: #0e6656; */
       color: white;
       cursor: pointer;
-      box-shadow: 0px 0px 8px #13846f;
+      box-shadow: 0px 0px 8px #00283C;
     }
   }
 `;
